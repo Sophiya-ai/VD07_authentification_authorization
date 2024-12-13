@@ -45,6 +45,8 @@ def get_users():
     users = User.query.all() # Получаем всех юзеров из базы данных и сохраняем в переменную users
     return str(users)
 
+app.run(debug=True)
+
 
 
 

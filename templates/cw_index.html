@@ -1,0 +1,30 @@
+<!-- form.hidden_tag() — скрытое поле для защиты от CSRF-атак. Проверяет сервер при получении данных.
+     Если какая-то программа попытается взаимодействовать с формой, сайт об этом сигнализирует;
+form.name.label — метка для текстового поля. Значение label указано в файле main.py;
+form.name(size=32) — само текстовое поле с указанной шириной;
+form.submit() — кнопка отправки формы -->
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask WTF Form</title>
+</head>
+<body>
+    <h1>Flask WTF Form</h1>
+    <form method="POST"> <!--Указываем метод, потому что что нам нужно только отправлять данные -->
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=32) }}
+            {% for error in form.name.errors %} <!--Отображение ошибок валидации -->
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
+</body>
+</html>
