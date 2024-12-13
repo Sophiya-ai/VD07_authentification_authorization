@@ -1,15 +1,15 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bcrypt import Bcrypt
+#from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 
 app = Flask(__name__)
-app.config['SECRETE_KEY'] = 'your_secrete_key'
+app.secret_key = 'your_secret_key_here'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 db = SQLAlchemy(app)
 
 #Создаём объект Bcrypt
-bcrypt = Bcrypt(app)
+#bcrypt = Bcrypt(app)
 
 #Создаём объект LoginManager
 login_manager = LoginManager(app)

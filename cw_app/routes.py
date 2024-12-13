@@ -1,9 +1,13 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
-from cw_app import models, forms
+from cw_app import app, db
 from cw_app.models import User
 from cw_app.forms import RegistrationForm, LoginForm
 import bcrypt #помогает зашифровать пароли, чтобы не хванить их в обчном виде
+from werkzeug.security import generate_password_hash, check_password_hash
+#`generate_password_hash` не существует в модуле `bcrypt`.
+# Эта функция обычно ассоциируется с библиотекой `werkzeug.security`, а не `bcrypt`
+
 
 #Создаём маршрут для главной страницы
 @app.route('/')
@@ -19,7 +23,7 @@ def register():
 
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        hashed_password = generate_password_hash(form.password.data)
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
@@ -37,7 +41,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
+        if user and check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember.data)
             return redirect(url_for('home'))
         else:
