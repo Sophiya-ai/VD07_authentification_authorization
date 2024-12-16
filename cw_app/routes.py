@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
 from cw_app import app, db
 from cw_app.models import User
-from cw_app.forms import RegistrationForm, LoginForm
+from cw_app.forms import RegistrationForm, LoginForm, AccountForm
 import bcrypt #помогает зашифровать пароли, чтобы не хванить их в обчном виде
 from werkzeug.security import generate_password_hash, check_password_hash
 #`generate_password_hash` не существует в модуле `bcrypt`.
@@ -39,6 +39,7 @@ def register():
 #Создаём маршрут для страницы входа, также обрабатываем методы GET и POST
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    #`current_user` — это объект, который предоставляет информацию о текущем пользователе, взаимодействующем с приложением
     if current_user.is_authenticated:
         return redirect(url_for('home'))
 
@@ -61,7 +62,22 @@ def logout():
 
 #Создаём маршрут для отображения страницы аккаунта.
 # Декоратор login_required требует, чтобы пользователь был авторизирован
-@app.route('/account')
+@app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    return render_template('account.html')
+    form = AccountForm()
+    user = User.query.filter_by(email=current_user.email).first()
+    print(user)
+    if request.method == 'POST':
+        if form.new_username.data != '' and form.new_username.validate(form):
+            user.username = form.new_username.data
+        if form.new_email.data != '' and form.new_email.validate(form):
+            user.email = form.new_email.data
+        if form.new_password.data != '' and form.new_password.validate(form):
+            user.password = form.new_password.data
+        db.session.commit()
+        if form.new_email.data != '' or form.new_password.data != '':
+            flash('Вы успешно изменили данные! Войдите заново', 'success')
+            return redirect(url_for('logout'))
+
+    return render_template('account.html', form=form)

@@ -15,4 +15,4 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
 
     def __repr__(self):  # Функция, чтобы представить информацию о пользователе в виде одной строки
-        return f'User: {self.username}, email: {self.emai}'
+        return f'User: {self.username}, email: {self.email}'
