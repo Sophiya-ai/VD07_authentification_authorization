@@ -5,24 +5,29 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Вход</h1>
-    <form method="POST" action="{{ url_for('login') }}">
-        {{ form.hidden_tag() }}
-        <div>
-            {{ form.email.label }}<br>
-            {{ form.email(size=64) }}
+    <div class="container mt-5"> <!-- margin-top level 5 -->
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <h1 class="text-uppercase text-center mb-4">Вход</h1>
+                <form method="POST" action="{{ url_for('login') }}" class="bg-light p-4 rounded shadow-sm">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.email.label }}<br>
+                        {{ form.email(size=64) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.password.label }}<br>
+                        {{ form.password(size=64) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.remember.label }}<br>
+                        {{ form.remember }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.submit() }}
+                    </div>
+                </form>
+             </div>
         </div>
-        <div>
-            {{ form.password.label }}<br>
-            {{ form.password(size=64) }}
-        </div>
-        <div>
-            {{ form.remember.label }}<br>
-            {{ form.remember }}
-        </div>
-        <div>
-            {{ form.submit() }}
-        </div>
-        
-    </form>
+    </div>
 {% endblock %}

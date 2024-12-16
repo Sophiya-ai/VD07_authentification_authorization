@@ -27,7 +27,6 @@ def register():
     # Это удобно, потому что позволяет обработать форму только в том случае,
     # если она была отправлена и все поля формы корректны
     if form.validate_on_submit():
-        form.validate_email(form.email)
         hashed_password = generate_password_hash(form.password.data)
         user = User(username=form.username.data, email=form.email.data, password=hashed_password)
         db.session.add(user)

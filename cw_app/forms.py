@@ -31,3 +31,6 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Запомни меня') #создание галочки с подписью
     submit = SubmitField('Login')
+
+class AccountForm(FlaskForm):
+    pass
