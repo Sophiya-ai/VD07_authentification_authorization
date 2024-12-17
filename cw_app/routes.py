@@ -74,7 +74,7 @@ def account():
         if form.new_email.data != '' and form.new_email.validate(form):
             user.email = form.new_email.data
         if form.new_password.data != '' and form.new_password.validate(form):
-            user.password = form.new_password.data
+            user.password = generate_password_hash(form.new_password.data)
         db.session.commit()
         if form.new_email.data != '' or form.new_password.data != '':
             flash('Вы успешно изменили данные! Войдите заново', 'success')
