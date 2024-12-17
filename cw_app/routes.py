@@ -66,10 +66,11 @@ def logout():
 @app.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
-    form = AccountForm()
+
     user = User.query.filter_by(email=current_user.email).first()
     print(user)
     if request.method == 'POST':
+        form = AccountForm(request.form)
         if form.new_username.data != '' and form.new_username.validate(form):
             try:
                 user.username = form.new_username.data
@@ -86,9 +87,11 @@ def account():
                 flash('Такая почта уже используется!','danger')
         if form.new_password.data != '' and form.new_password.validate(form):
             user.password = generate_password_hash(form.new_password.data)
-        db.session.commit()
+            db.session.commit()
         if form.new_email.data != '' or form.new_password.data != '':
             flash('Вы успешно изменили данные! Войдите заново', 'success')
             return redirect(url_for('logout'))
+    else:
+        form = AccountForm()
 
     return render_template('account.html', form=form)
