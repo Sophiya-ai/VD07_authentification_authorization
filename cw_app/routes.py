@@ -7,6 +7,7 @@ import bcrypt #помогает зашифровать пароли, чтобы 
 from werkzeug.security import generate_password_hash, check_password_hash
 #`generate_password_hash` не существует в модуле `bcrypt`.
 # Эта функция обычно ассоциируется с библиотекой `werkzeug.security`, а не `bcrypt`
+from sqlalchemy.exc import IntegrityError
 
 
 #Создаём маршрут для главной страницы
@@ -70,9 +71,19 @@ def account():
     print(user)
     if request.method == 'POST':
         if form.new_username.data != '' and form.new_username.validate(form):
-            user.username = form.new_username.data
+            try:
+                user.username = form.new_username.data
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                flash('Такое имя уже существует! Попробуйте ввести другое имя.','danger')
         if form.new_email.data != '' and form.new_email.validate(form):
-            user.email = form.new_email.data
+            try:
+                user.email = form.new_email.data
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                flash('Такая почта уже используется!','danger')
         if form.new_password.data != '' and form.new_password.validate(form):
             user.password = generate_password_hash(form.new_password.data)
         db.session.commit()

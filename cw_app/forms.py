@@ -39,14 +39,3 @@ class AccountForm(FlaskForm):
     new_password = PasswordField('New Password', default='', validators=[Length(min=2, max=10)])
     confirm_new_password = PasswordField('Confirm New Password', default='', validators=[EqualTo('new_password')])
     submit_change = SubmitField('Change')
-
-    # Создаём функции для проверки уникальности имени пользователя и почты
-    def validate_username(self, new_username):
-        user = User.query.filter_by(username=new_username.data).first()
-        if user:
-            raise IntegrityError('Такое имя уже существует.')  # raise для генерации исключений похожее на try-except
-
-    def validate_email(self, new_email):
-        user = User.query.filter_by(email=new_email.data).first()
-        if user:
-            raise IntegrityError('Такая почта уже используется.')
