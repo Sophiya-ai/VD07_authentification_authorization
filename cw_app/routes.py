@@ -75,6 +75,7 @@ def account():
             try:
                 user.username = form.new_username.data
                 db.session.commit()
+                return redirect(url_for('account'))
             except IntegrityError:
                 db.session.rollback()
                 flash('Такое имя уже существует! Попробуйте ввести другое имя.','danger')
@@ -88,6 +89,7 @@ def account():
         if form.new_password.data != '' and form.new_password.validate(form):
             user.password = generate_password_hash(form.new_password.data)
             db.session.commit()
+
         if form.new_email.data != '' or form.new_password.data != '':
             flash('Вы успешно изменили данные! Войдите заново', 'success')
             return redirect(url_for('logout'))
